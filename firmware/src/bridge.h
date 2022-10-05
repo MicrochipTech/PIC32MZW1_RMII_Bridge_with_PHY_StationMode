@@ -171,6 +171,7 @@ extern "C" {
         uint32_t w2e_count;
         uint32_t e2w_count;
         TCPIP_EVENT_HANDLE TCPIP_event_hdl;
+        TCPIP_STACK_PROCESS_HANDLE TCPIP_process_hdl; 
         TCPIP_NET_HANDLE netH;
         SYS_STATUS tcpipStat;
         char TimeStr[10];

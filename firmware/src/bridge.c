@@ -142,30 +142,27 @@ SYS_STATUS BRIDGE_is_TCPSTACK_Ready(void);
 
 
 bool pktEthHandler(TCPIP_NET_HANDLE hNet, struct _tag_TCPIP_MAC_PACKET* rxPkt, uint16_t frameType, const void* hParam) {
-    ARP_PACKET      *pArpPkt;
+    TCPIP_MAC_ETHERNET_HEADER   *pMacHdr;
     bool ret_val = false;
     
-    // Obtain the incoming ARP packet and process
-    pArpPkt = (ARP_PACKET*)rxPkt->pNetLayer;
-    
-    pArpPkt->HardwareType     = TCPIP_Helper_htons(pArpPkt->HardwareType);
-    pArpPkt->Protocol         = TCPIP_Helper_htons(pArpPkt->Protocol);
-    pArpPkt->Operation        = TCPIP_Helper_htons(pArpPkt->Operation);
+    // Obtain the incoming MAC packet and process    
+    pMacHdr =  (TCPIP_MAC_ETHERNET_HEADER*)rxPkt->pMacLayer;
 
-    // Validate the ARP packet
-    if ( pArpPkt->HardwareType == HW_ETHERNET     &&
-            pArpPkt->MACAddrLen == sizeof(TCPIP_MAC_ADDR)  &&
-            pArpPkt->ProtocolLen == sizeof(IPV4_ADDR) )
-    {
-        SYS_CONSOLE_PRINT("[%s] arp packet, mac addr = %x:%x:%x:%x:%x:%x\r\n", __func__, pArpPkt->SenderMACAddr.v[0], pArpPkt->SenderMACAddr.v[1], pArpPkt->SenderMACAddr.v[2], pArpPkt->SenderMACAddr.v[3], pArpPkt->SenderMACAddr.v[4], pArpPkt->SenderMACAddr.v[5]);
+    pMacHdr->Type = TCPIP_Helper_htons(pMacHdr->Type);
     
-        ret_val = TCPIP_STACK_NetAddressMacSet(brdg.wlan_net_hdl, &pArpPkt->SenderMACAddr);
+    // Validate the ARP packet
+    if(pMacHdr->Type  == TCPIP_ETHER_TYPE_IPV4)
+    {
+        SYS_CONSOLE_PRINT("[%s] Ether interface, mac addr = %x:%x:%x:%x:%x:%x\r\n", __func__, pMacHdr->SourceMACAddr.v[0], pMacHdr->SourceMACAddr.v[1], pMacHdr->SourceMACAddr.v[2], pMacHdr->SourceMACAddr.v[3], pMacHdr->SourceMACAddr.v[4], pMacHdr->SourceMACAddr.v[5]);
+    
+        ret_val = TCPIP_STACK_NetAddressMacSet(brdg.wlan_net_hdl, &pMacHdr->SourceMACAddr);
         if (ret_val == false) {
             SYS_CONSOLE_PRINT("Set MAC address failed\r\n");
         }
         else
         {
             SYS_CONSOLE_PRINT("Set MAC address success\r\n");
+            TCPIP_STACK_PacketHandlerDeregister(hNet, brdg.TCPIP_process_hdl);
             brdg.state = BRIDGE_STATE_REINIT_NETWORK;
         }
     }
@@ -309,7 +306,7 @@ void BRIDGE_Tasks(void) {
         
         case BRIDGE_STATE_FILTER_ARP:
 
-            TCPIP_STACK_PacketHandlerRegister(TCPIP_STACK_IndexToNet(ETH_NET), pktEthHandler, MyEthHandlerParam);
+            brdg.TCPIP_process_hdl = TCPIP_STACK_PacketHandlerRegister(TCPIP_STACK_IndexToNet(ETH_NET), pktEthHandler, MyEthHandlerParam);
             brdg.state = BRIDGE_STATE_IDLE;
             break;
 
@@ -548,10 +545,11 @@ void BRIDGE_Display_Status(void) {
 
 }
 
-#include ".\config\pic32mz_w1_curiosity_freertos\driver\ethmac\src\dynamic\_eth_dcpt_lists.h"
-#include ".\config\pic32mz_w1_curiosity_freertos\driver\ethmac\src\dynamic\drv_eth_pic32_lib.h"
-#include ".\config\pic32mz_w1_curiosity_freertos\driver\ethmac\src\drv_ethmac_local.h"
-#include ".\config\pic32mz_w1_curiosity_freertos\driver\ethmac\src\dynamic\drv_ethmac_lib.h"
+
+#include "driver/ethmac/src/dynamic/_eth_dcpt_lists.h"
+#include "driver/ethmac/src/dynamic/drv_eth_pic32_lib.h"
+#include "driver/ethmac/src/drv_ethmac_local.h"
+#include "driver/ethmac/src/dynamic/drv_ethmac_lib.h"
 
 #if 0
 static __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_TxLock(DRV_ETHMAC_INSTANCE_DCPT* pMacD) {

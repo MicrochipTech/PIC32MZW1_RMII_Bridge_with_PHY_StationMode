@@ -33,6 +33,8 @@
 #include "tcpip/src/arp_private.h"
 #include "tcpip/tcpip_manager.h"
 
+
+#define BTL_TRIGGER_PATTERN (0x5048434DUL)
 // *****************************************************************************
 // *****************************************************************************
 // Section: Global Data Definitions
@@ -53,6 +55,8 @@
 
     Application strings and buffers are be defined outside this structure.
 */
+
+static uint32_t *ramStart = (uint32_t *)BTL_TRIGGER_RAM_START;
 
 APP_DATA appData;
 
@@ -150,39 +154,50 @@ void APP_Tasks ( void )
         {
             bool appInitialized = true;
 
+            /* Add Delay for the UART Console to get enumerated after reset */
+            APP_TIMER_DelayMs(1000);
+
+            SYS_CONSOLE_MESSAGE("\n\r####### Application loaded from Bootloader #######\n\r");
+
+            SYS_CONSOLE_MESSAGE("\n\r####### Press and Hold the Switch to trigger Bootloader #######\n\r");
 
             if (appInitialized)
             {
 
-                appData.state = APP_STATE_REGISTER_ETH_PKG_CB;
+                appData.state = APP_STATE_SWITCH_PRESS_WAIT;
             }
             break;
         }
 
-        case APP_STATE_REGISTER_ETH_PKG_CB:
-        {
 
-            ///TCPIP_NET_HANDLE netH;
-            //TCPIP_ARP_ENTRY_QUERY arpQuery;
-            //size_t      arpEntries, ix;
-            //char        addrBuff[20];
-            
-            ///netH = TCPIP_STACK_NetHandleGet("eth0");
-            
-            ///TCPIP_STACK_PacketHandlerRegister(netH, pktEthHandler, MyEthHandlerParam);
-            
-            ///appData.state = APP_STATE_SERVICE_TASKS;
- #if 0          
-            arpEntries = TCPIP_ARP_CacheEntriesNoGet(netH, ARP_ENTRY_TYPE_TOTAL);
-            for(ix = 0; ix < arpEntries; ix++)
+        case APP_STATE_SWITCH_PRESS_WAIT:
+        {
+            if (SWITCH_GET() == SWITCH_PRESSED)
             {
-                TCPIP_ARP_EntryQuery(netH, ix, &arpQuery);
-                TCPIP_Helper_IPAddressToString(&arpQuery.entryIpAdd, addrBuff, sizeof(addrBuff));
-                TCPIP_Helper_MACAddressToString(&arpQuery.entryHwAdd, addrBuff, sizeof(addrBuff));
-                SYS_CONSOLE_PRINT("MAC Address=%s\r\n",addrBuff);
+                appData.state = APP_STATE_TRIGGER_BOOTLOADER;
             }
-#endif
+
+            APP_TIMER_DelayMs(1000);
+
+            LED_TOGGLE();
+
             break;
+        }
+
+        case APP_STATE_TRIGGER_BOOTLOADER:
+        {
+            printf("\n\r####### Bootloader Triggered #######\n\r");
+
+            printf("\n\r####### Disconnect console to program new firmware from Bootloader #######\n\r");
+
+            ramStart[0] = BTL_TRIGGER_PATTERN;
+            ramStart[1] = BTL_TRIGGER_PATTERN;
+            ramStart[2] = BTL_TRIGGER_PATTERN;
+            ramStart[3] = BTL_TRIGGER_PATTERN;
+
+            DCACHE_CLEAN_BY_ADDR(ramStart, 16);
+
+            APP_SystemReset();
         }
         
         case APP_STATE_SERVICE_TASKS:

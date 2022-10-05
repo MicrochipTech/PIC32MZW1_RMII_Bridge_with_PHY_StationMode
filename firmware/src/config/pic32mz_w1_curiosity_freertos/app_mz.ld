@@ -1,6 +1,6 @@
 /*--------------------------------------------------------------------------
- * MPLAB XC Compiler -  PIC32MZ1025W104132 linker script
- * Build date : Sep 06 2021
+ * MPLAB XC Compiler -  PIC32MZ W1 Application linker script
+ * Build date : Feb 02 2021
  * 
  * Copyright (c) 2021, Microchip Technology Inc. and its subsidiaries ("Microchip")
  * All rights reserved.
@@ -36,7 +36,7 @@
  * 
  */
 
-/* Default linker script, for normal executables */
+/* Custom linker script, for applications programmed through a bootloader */
 
 /*  NOTE: This single-file linker script replaces the two-file system used
  *  for older PIC32 devices. 
@@ -82,6 +82,11 @@ OPTIONAL("vector_offset_init.o")
 PROVIDE(_vector_spacing = 0x0001);
 PROVIDE(_ebase_address = 0x90000000);
 
+/* Place the vector table and other exceptions after the device reset and
+ * cache init code.
+ */
+PROVIDE(_ebase_vector_offsets = 0x1000);
+
 /*************************************************************************
  * Memory Address Equates
  * _RESET_ADDR                    -- Reset Vector or entry point
@@ -91,12 +96,10 @@ PROVIDE(_ebase_address = 0x90000000);
  * _CACHE_ERR_EXCPT_ADDR          -- Cache-error Exception Vector
  * _GEN_EXCPT_ADDR                -- General Exception Vector
  *************************************************************************/
-_RESET_ADDR                    = 0xBFC00000;
-_BEV_EXCPT_ADDR                = 0xBFC00380;
-_DBG_EXCPT_ADDR                = 0xBFC00480;
-_SIMPLE_TLB_REFILL_EXCPT_ADDR  = _ebase_address + 0;
-_CACHE_ERR_EXCPT_ADDR          = _ebase_address + 0x100;
-_GEN_EXCPT_ADDR                = _ebase_address + 0x180;
+_RESET_ADDR                    = 0xB0000000;
+_SIMPLE_TLB_REFILL_EXCPT_ADDR  = _ebase_address + _ebase_vector_offsets + 0;
+_CACHE_ERR_EXCPT_ADDR          = _ebase_address + _ebase_vector_offsets + 0x100;
+_GEN_EXCPT_ADDR                = _ebase_address + _ebase_vector_offsets + 0x180;
 
 /*************************************************************************
  * Memory Regions
@@ -105,41 +108,24 @@ _GEN_EXCPT_ADDR                = _ebase_address + 0x180;
  * Only sections specifically assigned to these regions can be allocated
  * into these regions.
  *
- * The Debug exception vector is located at 0x9FC00480.
- *
  * The config_<address> sections are used to locate the config words at
  * their absolute addresses.
  *************************************************************************/
 
-
 MEMORY
 {
-  kseg0_program_mem     (rx)  : ORIGIN = 0x90000000, LENGTH = 0x100000
-  kseg0_boot_mem              : ORIGIN = 0x9FC004B0, LENGTH = 0x0
-  kseg1_boot_mem              : ORIGIN = 0xBFC00000, LENGTH = 0x480
-  kseg1_boot_mem_4B0          : ORIGIN = 0xBFC004B0, LENGTH = 0xFB50
-  config_BFC55E88             : ORIGIN = 0xBFC55E88, LENGTH = 0x4
-  config_BFC55E8C             : ORIGIN = 0xBFC55E8C, LENGTH = 0x4
-  config_BFC55E90             : ORIGIN = 0xBFC55E90, LENGTH = 0x4
-  config_BFC55E94             : ORIGIN = 0xBFC55E94, LENGTH = 0x4
-  config_BFC55E98             : ORIGIN = 0xBFC55E98, LENGTH = 0x4
-  config_BFC55E9C             : ORIGIN = 0xBFC55E9C, LENGTH = 0x4
-  config_BFC55EBC             : ORIGIN = 0xBFC55EBC, LENGTH = 0x4
-  config_BFC55F88             : ORIGIN = 0xBFC55F88, LENGTH = 0x4
-  config_BFC55F8C             : ORIGIN = 0xBFC55F8C, LENGTH = 0x4
-  config_BFC55F90             : ORIGIN = 0xBFC55F90, LENGTH = 0x4
-  config_BFC55F94             : ORIGIN = 0xBFC55F94, LENGTH = 0x4
-  config_BFC55F98             : ORIGIN = 0xBFC55F98, LENGTH = 0x4
-  config_BFC55F9C             : ORIGIN = 0xBFC55F9C, LENGTH = 0x4
-  config_BFC55FBC             : ORIGIN = 0xBFC55FBC, LENGTH = 0x4
-  config_BFC55FDC             : ORIGIN = 0xBFC55FDC, LENGTH = 0x4
-  kseg0_data_mem       (w!x)  : ORIGIN = 0x80000000, LENGTH = 0x40000
+  /* All C files will be located here */
+  kseg0_program_mem     (rx)  : ORIGIN = 0x90001000, LENGTH = 0x100000 - 0x1000
+  kseg1_boot_mem              : ORIGIN = 0xB0000000, LENGTH = 0x480
+  kseg1_boot_mem_4B0          : ORIGIN = 0xB00004B0, LENGTH = 0x1000 - 0x4B0
+
+  /* Reserve 16 Bytes to Store Bootloader Trigger Pattern */
+  kseg0_data_mem       (w!x)  : ORIGIN = 0x80000000 + 16, LENGTH = 0x40000 - 16
   sfrs                        : ORIGIN = 0xBF800000, LENGTH = 0x100000
   configsfrs_BFC55E88         : ORIGIN = 0xBFC55E88, LENGTH = 0x18
   configsfrs_BFC55EBC         : ORIGIN = 0xBFC55EBC, LENGTH = 0x4
   configsfrs_BFC55F88         : ORIGIN = 0xBFC55F88, LENGTH = 0x18
   configsfrs_BFC55FBC         : ORIGIN = 0xBFC55FBC, LENGTH = 0x4
-  configsfrs_BFC55FDC         : ORIGIN = 0xBFC55FDC, LENGTH = 0x4
 }
 
 /*************************************************************************
@@ -148,64 +134,13 @@ MEMORY
  *************************************************************************/
 SECTIONS
 {
-  .config_BFC55E88 : {
-    KEEP(*(.config_BFC55E88))
-  } > config_BFC55E88
-  .config_BFC55E8C : {
-    KEEP(*(.config_BFC55E8C))
-  } > config_BFC55E8C
-  .config_BFC55E90 : {
-    KEEP(*(.config_BFC55E90))
-  } > config_BFC55E90
-  .config_BFC55E94 : {
-    KEEP(*(.config_BFC55E94))
-  } > config_BFC55E94
-  .config_BFC55E98 : {
-    KEEP(*(.config_BFC55E98))
-  } > config_BFC55E98
-  .config_BFC55E9C : {
-    KEEP(*(.config_BFC55E9C))
-  } > config_BFC55E9C
-  .config_BFC55EBC : {
-    KEEP(*(.config_BFC55EBC))
-  } > config_BFC55EBC
-  .config_BFC55F88 : {
-    KEEP(*(.config_BFC55F88))
-  } > config_BFC55F88
-  .config_BFC55F8C : {
-    KEEP(*(.config_BFC55F8C))
-  } > config_BFC55F8C
-  .config_BFC55F90 : {
-    KEEP(*(.config_BFC55F90))
-  } > config_BFC55F90
-  .config_BFC55F94 : {
-    KEEP(*(.config_BFC55F94))
-  } > config_BFC55F94
-  .config_BFC55F98 : {
-    KEEP(*(.config_BFC55F98))
-  } > config_BFC55F98
-  .config_BFC55F9C : {
-    KEEP(*(.config_BFC55F9C))
-  } > config_BFC55F9C
-  .config_BFC55FBC : {
-    KEEP(*(.config_BFC55FBC))
-  } > config_BFC55FBC
-  .config_BFC55FDC : {
-    KEEP(*(.config_BFC55FDC))
-  } > config_BFC55FDC
-}
-SECTIONS
-{
   /* Boot Sections */
   .reset _RESET_ADDR :
   {
     KEEP(*(.reset))
     KEEP(*(.reset.startup))
   } > kseg1_boot_mem
-  .bev_excpt _BEV_EXCPT_ADDR :
-  {
-    KEEP(*(.bev_handler))
-  } > kseg1_boot_mem
+
   .cache_init :
   {
     *(.cache_init)
@@ -216,17 +151,19 @@ SECTIONS
   {
     KEEP(*(.simple_tlb_refill_vector))
   } > kseg0_program_mem
+
   .cache_err_excpt _CACHE_ERR_EXCPT_ADDR :
   {
     KEEP(*(.cache_err_vector))
   } > kseg0_program_mem
+
   .app_excpt _GEN_EXCPT_ADDR :
   {
     KEEP(*(.gen_handler))
   } > kseg0_program_mem
 
   /* Interrupt vector table with vector offsets */
-  .vectors _ebase_address + 0x200 :
+  .vectors _ebase_address + _ebase_vector_offsets + 0x200 :
   {
     /*  Symbol __vector_offset_n points to .vector_n if it exists, 
      *  otherwise points to the default handler. The
@@ -1008,15 +945,6 @@ SECTIONS
     KEEP(*(.vector_default))
   } > kseg0_program_mem
 
-  /*  The startup code is in the .reset.startup section.
-   *  Keep this here for backwards compatibility with older
-   *  C32 v1.xx releases.
-   */
-  .startup ORIGIN(kseg0_boot_mem) :
-  {
-    KEEP(*(.startup))
-  } > kseg0_boot_mem
-
   /* Code Sections - Note that input sections *(.text) and *(.text.*)
    * are not mapped here. The best-fit allocator locates them,
    * so that .text may flow around absolute sections as needed.
@@ -1314,6 +1242,8 @@ SECTIONS
   .gnu.attributes 0 : { KEEP (*(.gnu.attributes)) }
   /DISCARD/ : { *(.note.GNU-stack) }
   /DISCARD/ : { *(.note.GNU-stack) *(.gnu_debuglink) *(.gnu.lto_*) *(.discard) }
+  /DISCARD/ : { *(._debug_exception) }
+  /DISCARD/ : { *(.config_*) }
 }
 
 /*************************************************************************

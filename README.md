@@ -1,4 +1,4 @@
-# Ethernet WiFi Bridge For Ethernet End Node (WFI32 running as STA mode)
+# Ethernet to WiFi Bridge with PHY 
 <img src="images/IoT-Made-Easy-Logo.png" width=100>
 
 > "Wireless Made Easy!" - This example application acts as a bridge to bridge up WiFi and ETH interface of WFI32 device, WFI32 set as Wi-Fi Station(STA) mode to connect to Access point(AP). The WFI32 device help connect ETH end node to the Access point (AP) in this example.
@@ -7,7 +7,32 @@ Devices: **WFI32E01**
 
 ## Description
 
-This application demonstrates how a ETH end node can connect to a WiFi network through WFI32 device. The WFI32 device is set as Wi-Fi Station (STA) mode to connect the Accesss point (AP) and act as a Wi-Fi ETH bridge to bridge up the Wi-Fi and Ethernet interface. In the setup, ETH end node connect to the Ethernet connector of WFI32 device and exchange data with the Access Point through the WFI32 device. The user would need to configure the Home AP credentials (like SSID and security items). The Wi-Fi service running on WFI32 device will use the credentials to connect to the Home AP.The default application will try to establish a connection to AP "DEMO_AP" with WPA2 security and password as a "password".
+The goal is to provide a turnkey solution to enable wireless connectivity on a Ethernet Phy based node. 
+
+The solution includes a UART based bootloader and command interface to configure the WFI32 based wireless interface.
+
+In this example a PIC32MZ EF Starter kit is used as the Ethernet Phy node. The PIC32MZ EF peer uses UART1 for upgrading and controlling the WFI32 Application. 
+
+Following are the UART pin details: -
+
+| PIC32 EF Starter Kit  | WFI32E Curiosity Board  |
+|:----------|:----------|
+| J12-Pin#15 (U1Tx)    | J207-Pin#13 (U1Rx)    |
+| J12-Pin#37 (U1Rx)    | J207-Pin#23 (U1Tx)    |
+| J12-Pin#39 (GND)   | J207-Pin#17 (GND)    |
+
+
+There are mainly 2 software components on the WFI32 Wi-Fi module. 
+- [UART based Bootloader](https://github.com/Microchip-MPLAB-Harmony/bootloader_apps_uart/blob/master/apps/uart_bootloader/docs/readme_pic32mz_w1_curiosity.md)
+
+	The UART bootloader project ../bootloader_apps_uart/apps/uart_bootloader/bootloader/firmware/pic32mz_w1_curiosity.X is flashed into the WFI32 devic
+
+- Ethernet bridge Application
+
+  
+
+
+The main application demonstrates how a ETH end node can connect to a WiFi network through WFI32 device. The WFI32 device is set as Wi-Fi Station (STA) mode to connect the Accesss point (AP) and act as a Wi-Fi ETH bridge to bridge up the Wi-Fi and Ethernet interface. In the setup, ETH end node connect to the Ethernet connector of WFI32 device and exchange data with the Access Point through the WFI32 device. The user would need to configure the Home AP credentials (like SSID and security items). The Wi-Fi service running on WFI32 device will use the credentials to connect to the Home AP.The default application will try to establish a connection to AP "DEMO_AP" with WPA2 security and password as a "password".
 
 ![](images/bridge_diagram.png)
 
@@ -20,7 +45,7 @@ The H3 L2 Bridge feature is not used in this project
 ## Software requirement
 
 The sample project has been created and tested with the following Software Development Tools:
-- [MPLAB X IDE v5.50](https://www.microchip.com/en-us/tools-resources/develop/mplab-x-ide)
+- [MPLAB X IDE v6.00](https://www.microchip.com/en-us/tools-resources/develop/mplab-x-ide)
 - [MPLAB XC32 v3.01](https://www.microchip.com/en-us/tools-resources/develop/mplab-xc-compilers)
 - MPLAB Harmony v3.6.4
    - mhc v3.8.2

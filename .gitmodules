@@ -1,0 +1,7 @@
+[submodule "bootloader_apps_uart"]
+	path = bootloader_apps_uart
+	url = https://github.com/Microchip-MPLAB-Harmony/bootloader_apps_uart
+	tag = v3.1.0
+[submodule "bootloader"]
+	path = bootloader
+	url = https://github.com/Microchip-MPLAB-Harmony/bootloader
