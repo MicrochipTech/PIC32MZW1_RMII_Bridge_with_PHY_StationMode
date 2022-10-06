@@ -83,12 +83,11 @@ The successful cloning of the repo would result in following folders
 
 ![](images/repo_folder_structure.png)
 
-| Project Name      | Description                                    |path    |
-| ----------------- | ---------------------------------------------- |--------|
-|pic32mz_w1_curiosity.X| MPLABX project for WFI32 UART Bootloader |./bootloader_apps_uart/apps/uart_bootloader/bootloader/firmware|
-| wifi_eth_bridge_pic32mz_w1_curiosity_freertos.X | MPLABX project for PIC32MZ W1 Curiosity Board | ./firmware|
-|pic32mz_ef_sk.X| MPLABX project for PIC32 MZ EF Starter Kit(Ethernet Host board) |./tcpip_udp_server/firmware |
-||||
+| Description  | Path | Project Name  |
+|:----------|:----------|:----------|
+| MPLABX project for WFI32 UART Bootloader    | ./bootloader_apps_uart/apps/uart_bootloader/bootloader/firmware    | pic32mz_w1_curiosity.X    |
+| MPLABX project for PIC32MZ W1 Curiosity Board    | ./firmware  | wifi_eth_bridge_pic32mz_w1_curiosity_freertos.X    |
+| MPLABX project for PIC32 MZ EF Starter Kit(Ethernet Host board)    | tcpip_udp_server/firmware    | pic32mz_ef_sk.X    |
 
 
 Download and install a serial terminal program like [TeraTerm](https://osdn.net/projects/ttssh2/releases/). Launch TeraTerm program and configure the serial ports mounted with: **115200 bps, 8 N 1**
