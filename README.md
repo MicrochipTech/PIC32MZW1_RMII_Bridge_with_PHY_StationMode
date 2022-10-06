@@ -43,11 +43,12 @@ The following diagram illustrates various componets involved in this solution
 ![](images/block_diagram.png)
 
 There are mainly 3 software components on the WFI32 Wi-Fi module. 
-- [UART based Bootloader](https://github.com/Microchip-MPLAB-Harmony/bootloader_apps_uart/blob/master/apps/uart_bootloader/docs/readme_pic32mz_w1_curiosity.md)
 
-	The UART bootloader project ../bootloader_apps_uart/apps/uart_bootloader/bootloader/firmware/pic32mz_w1_curiosity.X is flashed into the WFI32 devic
+**1. UART based Bootloader**
 
-- Ethernet bridge Application
+The UART bootloader project ../bootloader_apps_uart/apps/uart_bootloader/bootloader/firmware/pic32mz_w1_curiosity.X is flashed into the WFI32 device. The purpose of the bootloader is to enable the application/firmware upgrade though the UART interface. In this solution same UART is connected to the Ethernet peer devcie. It enables the capability to update the WFI32 device in the field. Refer to the UART based bootloader user guide at the [link](https://github.com/Microchip-MPLAB-Harmony/bootloader_apps_uart/blob/master/apps/uart_bootloader/docs/readme_pic32mz_w1_curiosity.md)
+
+**2. Ethernet bridge Application**
 
 The main application demonstrates how a ETH end node can connect to a WiFi network through WFI32 device. The WFI32 device is set as Wi-Fi Station (STA) mode to connect the Accesss point (AP) and act as a Wi-Fi ETH bridge to bridge up the Wi-Fi and Ethernet interface. In the setup, ETH end node connect to the Ethernet connector of WFI32 device and exchange data with the Access Point through the WFI32 device. 
 
@@ -58,15 +59,17 @@ Note:- The bridge applicaiton does not use the H3 L2 Bridge feature.
 The user would need to configure the Home AP credentials (like SSID and security items). The Wi-Fi service running on WFI32 device will use the credentials to connect to the Home AP.The default application will try to establish a connection to AP "DEMO_AP" with WPA2 security and password as a "password".
 
 
-- Ethernet Host Application
+**3. Ethernet Host Application**
 
-It is a example PIC32MZ EF SK network application (tcpip_udp_server) which acts as the Ethernet host application. It uses the Ethernet PHY interface to access the WFI32 board Wi-Fi interface. The example applicaiton is modified to bridge its console interface with the WFI32 CLI.
+It is an PIC32MZ EF SK based example network application (tcpip_udp_server), it acts as the Ethernet host application with a UDP server listening for incoming connection. It uses the Ethernet PHY interface to access the WFI32 board Wi-Fi interface. 
 
-The "bridge" command is used to access the WFI32 CLI interface. 
+The example applicaiton is capable of accessing the WFI32 CLI commands, the UART console interface tunnels the user commands to WFI32 UART interface.
+
+The "bridge" command is used to link the WFI32 CLI interface on PIC32MZ EF SK console. 
    - '*>bridge on/off*' -> Enables/Disables the WFI32 CLI interface on the PIC32MZ console interface
    - '*>bridge tunnel <WFI32 CLI commands>* -> Triggers the WFI32 CLI commands from the PIC32MZ console interface
 
-Note:- The current PIC32MZ EF SK example includes only command bridge support but doesn't include the capability to upgrade/flash the WFI32 module firmware/application. In order to have the upgrade feature from host(PIC32MZ EF SK), the python command used in the [bootloader](https://github.com/Microchip-MPLAB-Harmony/bootloader_apps_uart/blob/master/apps/uart_bootloader/docs/readme_pic32mz_w1_curiosity.md) use guide needs to be ported on PIC32 MZ SK.
+Note:- The current PIC32MZ EF SK example includes only bridge support for command interface. **It doesn't include the capability to upgrade/flash the WFI32 module firmware/application**. In order to have the upgrade feature from host(PIC32MZ EF SK), the python command used with the [bootloader](https://github.com/Microchip-MPLAB-Harmony/bootloader_apps_uart/blob/master/apps/uart_bootloader/docs/readme_pic32mz_w1_curiosity.md) needs to be ported on PIC32 MZ SK.
 
 ![](images/bridge_diagram.png)
 
@@ -80,10 +83,12 @@ The successful cloning of the repo would result in following folders
 
 ![](images/repo_folder_structure.png)
 
-| Project Name      | Description                                    |
-| ----------------- | ---------------------------------------------- |
-| wifi_eth_bridge_pic32mz_w1_curiosity_freertos.X | MPLABX project for PIC32MZ W1 Curiosity Board |
-|||
+| Project Name      | Description                                    |path    |
+| ----------------- | ---------------------------------------------- |--------|
+|pic32mz_w1_curiosity.X| MPLABX project for WFI32 UART Bootloader |./bootloader_apps_uart/apps/uart_bootloader/bootloader/firmware|
+| wifi_eth_bridge_pic32mz_w1_curiosity_freertos.X | MPLABX project for PIC32MZ W1 Curiosity Board | ./firmware|
+|pic32mz_ef_sk.X| MPLABX project for PIC32 MZ EF Starter Kit(Ethernet Host board) |./tcpip_udp_server/firmware |
+||||
 
 
 Download and install a serial terminal program like [TeraTerm](https://osdn.net/projects/ttssh2/releases/). Launch TeraTerm program and configure the serial ports mounted with: **115200 bps, 8 N 1**
