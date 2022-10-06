@@ -115,7 +115,6 @@ Download and install a serial terminal program like [TeraTerm](https://osdn.net/
 8. Following snapshot shows output of successfully programming the test application
     - **Rebooting** and **Reboot Done** messages in below output signifies that bootloading is successful
 
-![](./images/uart_bootloader_update.mov)
 
 ![](./images/btl_host_output.png)
 
