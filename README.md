@@ -174,5 +174,5 @@ Following command sequence showcases the method to change the WiFi configuration
 10. The tcpip_udp_server application can be accessed from any UDP client in the same network
 
 
-![](images/uart_cli_bridge.png)
+![](images/bridge_log2.png)
 
