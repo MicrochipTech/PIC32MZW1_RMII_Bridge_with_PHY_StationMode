@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/Users/c21415/H3_New/net_apps_pic32mz/apps/tcpip_udp_server/firmware/src/app.h</file>
+            <file>file:/Users/c21415/H3_New/net_apps_pic32mz/apps/tcpip_udp_server/firmware/src/config/pic32mz_ef_sk/driver/ethphy/src/dynamic/drv_ethphy.c</file>
+            <file>file:/Users/c21415/H3_New/net_apps_pic32mz/apps/tcpip_udp_server/firmware/src/config/pic32mz_ef_sk/peripheral/evic/plib_evic.c</file>
+            <file>file:/Users/c21415/H3_New/net_apps_pic32mz/apps/tcpip_udp_server/firmware/src/config/pic32mz_ef_sk/exceptions.c</file>
+            <file>file:/Users/c21415/H3_New/net_apps_pic32mz/apps/tcpip_udp_server/firmware/src/app.c</file>
+            <file>file:/Users/c21415/H3_New/net_apps_pic32mz/apps/tcpip_udp_server/firmware/src/config/pic32mz_ef_sk/library/tcpip/src/tcpip_commands.c</file>
+            <file>file:/Users/c21415/H3_New/net_apps_pic32mz/apps/tcpip_udp_server/firmware/src/config/pic32mz_ef_sk/driver/ethmac/src/dynamic/drv_ethmac.c</file>
+            <file>file:/Users/c21415/H3_New/net_apps_pic32mz/apps/tcpip_udp_server/firmware/src/config/pic32mz_ef_sk/system/command/src/sys_command.c</file>
+            <file>file:/Users/c21415/H3_New/net_apps_pic32mz/apps/tcpip_udp_server/firmware/src/config/pic32mz_ef_sk/peripheral/uart/plib_uart2.c</file>
+            <file>file:/Users/c21415/H3_New/net_apps_pic32mz/apps/tcpip_udp_server/firmware/src/config/pic32mz_ef_sk/peripheral/uart/plib_uart1.c</file>
+            <file>file:/Users/c21415/H3_New/net_apps_pic32mz/apps/tcpip_udp_server/firmware/src/config/pic32mz_ef_sk/library/tcpip/src/udp.c</file>
+            <file>file:/Users/c21415/H3_New/net_apps_pic32mz/apps/tcpip_udp_server/firmware/src/config/pic32mz_ef_sk/library/tcpip/src/tcpip_manager.c</file>
+            <file>file:/Users/c21415/H3_New/net_apps_pic32mz/apps/tcpip_udp_server/firmware/src/config/pic32mz_ef_sk/tasks.c</file>
+            <file>file:/Users/c21415/H3_New/net_apps_pic32mz/apps/tcpip_udp_server/firmware/src/config/pic32mz_ef_sk/driver/miim/src/dynamic/drv_miim_mapping.h</file>
+            <file>file:/Users/c21415/H3_New/net_apps_pic32mz/apps/tcpip_udp_server/firmware/src/config/pic32mz_ef_sk/system/command/sys_command.h</file>
+            <file>file:/Users/c21415/H3_New/net_apps_pic32mz/apps/tcpip_udp_server/firmware/src/config/pic32mz_ef_sk/system/console/src/sys_console_uart.c</file>
+            <file>file:/Users/c21415/H3_New/net_apps_pic32mz/apps/tcpip_udp_server/firmware/src/config/pic32mz_ef_sk/library/tcpip/src/tcpip_manager_control.h</file>
+            <file>file:/Users/c21415/H3_New/net_apps_pic32mz/apps/tcpip_udp_server/firmware/src/config/pic32mz_ef_sk/library/tcpip/src/dhcp.c</file>
+            <file>file:/Users/c21415/H3_New/net_apps_pic32mz/apps/tcpip_udp_server/firmware/src/config/pic32mz_ef_sk/driver/miim/src/dynamic/drv_miim.c</file>
+            <file>file:/Users/c21415/H3_New/net_apps_pic32mz/apps/tcpip_udp_server/firmware/src/config/pic32mz_ef_sk/system/int/src/sys_int.c</file>
+            <file>file:/Users/c21415/H3_New/net_apps_pic32mz/apps/tcpip_udp_server/firmware/src/config/pic32mz_ef_sk/system/time/src/sys_time.c</file>
+            <file>file:/Users/c21415/H3_New/net_apps_pic32mz/apps/tcpip_udp_server/firmware/src/config/pic32mz_ef_sk/system/time/src/sys_time_local.h</file>
+            <file>file:/Users/c21415/H3_New/net_apps_pic32mz/apps/tcpip_udp_server/firmware/src/config/pic32mz_ef_sk/configuration.h</file>
+            <file>file:/Users/c21415/H3_New/net_apps_pic32mz/apps/tcpip_udp_server/firmware/src/config/pic32mz_ef_sk/library/tcpip/tcpip_manager.h</file>
+            <file>file:/Users/c21415/H3_New/net_apps_pic32mz/apps/tcpip_udp_server/firmware/src/main.c</file>
+            <file>file:/Users/c21415/H3_New/net_apps_pic32mz/apps/tcpip_udp_server/firmware/src/config/pic32mz_ef_sk/initialization.c</file>
+            <file>file:/Users/c21415/H3_New/net_apps_pic32mz/apps/tcpip_udp_server/firmware/src/config/pic32mz_ef_sk/peripheral/uart/plib_uart_common.h</file>
+            <file>file:/Users/c21415/H3_New/net_apps_pic32mz/apps/tcpip_udp_server/firmware/src/config/pic32mz_ef_sk/system/console/sys_console.h</file>
+            <file>file:/Users/c21415/H3_New/net_apps_pic32mz/apps/tcpip_udp_server/firmware/src/config/pic32mz_ef_sk/osal/osal_impl_basic.h</file>
+            <file>file:/Users/c21415/H3_New/net_apps_pic32mz/apps/tcpip_udp_server/firmware/src/config/pic32mz_ef_sk/system/console/src/sys_console_uart_definitions.h</file>
+            <file>file:/Users/c21415/H3_New/net_apps_pic32mz/apps/tcpip_udp_server/firmware/src/config/pic32mz_ef_sk/system/time/sys_time.h</file>
+            <file>file:/Users/c21415/H3_New/net_apps_pic32mz/apps/tcpip_udp_server/firmware/src/config/pic32mz_ef_sk/system/console/src/sys_console.c</file>
+        </group>
+    </open-files>
+</project-private>

@@ -9,38 +9,7 @@ Devices: **WFI32E01**
 
 The goal is to provide a turnkey solution to enable wireless connectivity on a Ethernet Phy based node. 
 
-The solution includes a UART based bootloader and command interface to configure the WFI32 based wireless interface.
-
-In this example a PIC32MZ EF Starter kit is used as the Ethernet Phy node. The PIC32MZ EF peer uses UART1 for upgrading and controlling the WFI32 Application. 
-
-Following are the UART pin details: -
-
-| PIC32 EF Starter Kit  | WFI32E Curiosity Board  |
-|:----------|:----------|
-| J12-Pin#15 (U1Tx)    | J207-Pin#13 (U1Rx)    |
-| J12-Pin#37 (U1Rx)    | J207-Pin#23 (U1Tx)    |
-| J12-Pin#39 (GND)   | J207-Pin#17 (GND)    |
-
-
-There are mainly 2 software components on the WFI32 Wi-Fi module. 
-- [UART based Bootloader](https://github.com/Microchip-MPLAB-Harmony/bootloader_apps_uart/blob/master/apps/uart_bootloader/docs/readme_pic32mz_w1_curiosity.md)
-
-	The UART bootloader project ../bootloader_apps_uart/apps/uart_bootloader/bootloader/firmware/pic32mz_w1_curiosity.X is flashed into the WFI32 devic
-
-- Ethernet bridge Application
-
-  
-
-
-The main application demonstrates how a ETH end node can connect to a WiFi network through WFI32 device. The WFI32 device is set as Wi-Fi Station (STA) mode to connect the Accesss point (AP) and act as a Wi-Fi ETH bridge to bridge up the Wi-Fi and Ethernet interface. In the setup, ETH end node connect to the Ethernet connector of WFI32 device and exchange data with the Access Point through the WFI32 device. The user would need to configure the Home AP credentials (like SSID and security items). The Wi-Fi service running on WFI32 device will use the credentials to connect to the Home AP.The default application will try to establish a connection to AP "DEMO_AP" with WPA2 security and password as a "password".
-
-![](images/bridge_diagram.png)
-
-This project process the IP packets that received from the Wi-Fi and ETH interface at bridge.c. The code in this file act as a transparent bridge to receive and forward the network packets to and from both Wi-Fi and ETH interface. It set the mac address of WFI32 to be the same as Ethernet end node so that the Ethernet end node can communicate with the AP. As both Ethernet end node and WFI32 are using the same mac address, they are acting as a single unit in the network.
-
-The H3 L2 Bridge feature is not used in this project
-
-![](images/block_diagram.png)
+The project includes a UART based bootloader and command interface to configure the WFI32 based wireless interface. It enables easier upgrade of WFI32 wireless node firmware and command interface to configure the wireless interface.
 
 ## Software requirement
 
@@ -59,56 +28,132 @@ The sample project has been created and tested with the following Software Devel
    - crypto v3.7.4
    - CMSIS-FreeRTOS v10.3.1
 
+## Hardware requirement
+   - [WFI32E Curiosity board](https://www.microchip.com/en-us/development-tool/EV12F11A)
+   - [PIC32MZ EF Starter kit](https://www.microchip.com/en-us/development-tool/DM320007-C)
+   - [PHY Daughter board]()
+   - Access point or Wi-Fi Router
+   - Micro and Mini USB cables
+   - Ethernet cable
 
-Download and install a serial terminal program like [TeraTerm](https://osdn.net/projects/ttssh2/releases/). Launch TeraTerm program and configure the serial ports mounted with: **115200 bps, 8 N 1**
+## Block Diagram
+
+The following diagram illustrates various componets involved in this solution
+
+![](images/block_diagram.png)
+
+There are mainly 3 software components on the WFI32 Wi-Fi module. 
+- [UART based Bootloader](https://github.com/Microchip-MPLAB-Harmony/bootloader_apps_uart/blob/master/apps/uart_bootloader/docs/readme_pic32mz_w1_curiosity.md)
+
+	The UART bootloader project ../bootloader_apps_uart/apps/uart_bootloader/bootloader/firmware/pic32mz_w1_curiosity.X is flashed into the WFI32 devic
+
+- Ethernet bridge Application
+
+The main application demonstrates how a ETH end node can connect to a WiFi network through WFI32 device. The WFI32 device is set as Wi-Fi Station (STA) mode to connect the Accesss point (AP) and act as a Wi-Fi ETH bridge to bridge up the Wi-Fi and Ethernet interface. In the setup, ETH end node connect to the Ethernet connector of WFI32 device and exchange data with the Access Point through the WFI32 device. 
+
+The application process the IP packets that received from the Wi-Fi and ETH interface at bridge.c. The code in this file act as a transparent bridge to receive and forward the network packets to and from both Wi-Fi and ETH interface. It set the mac address of WFI32 to be the same as Ethernet end node so that the Ethernet end node can communicate with the AP. As both Ethernet end node and WFI32 are using the same mac address, they are acting as a single unit in the network.
+
+Note:- The bridge applicaiton does not use the H3 L2 Bridge feature. 
+
+The user would need to configure the Home AP credentials (like SSID and security items). The Wi-Fi service running on WFI32 device will use the credentials to connect to the Home AP.The default application will try to establish a connection to AP "DEMO_AP" with WPA2 security and password as a "password".
+
+
+- Ethernet Host Application
+
+It is a example PIC32MZ EF SK network application (tcpip_udp_server) which acts as the Ethernet host application. It uses the Ethernet PHY interface to access the WFI32 board Wi-Fi interface. The example applicaiton is modified to bridge its console interface with the WFI32 CLI.
+
+The "bridge" command is used to access the WFI32 CLI interface. 
+   - '*>bridge on/off*' -> Enables/Disables the WFI32 CLI interface on the PIC32MZ console interface
+   - '*>bridge tunnel <WFI32 CLI commands>* -> Triggers the WFI32 CLI commands from the PIC32MZ console interface
+
+Note:- The current PIC32MZ EF SK example includes only command bridge support but doesn't include the capability to upgrade/flash the WFI32 module firmware/application. In order to have the upgrade feature from host(PIC32MZ EF SK), the python command used in the [bootloader](https://github.com/Microchip-MPLAB-Harmony/bootloader_apps_uart/blob/master/apps/uart_bootloader/docs/readme_pic32mz_w1_curiosity.md) use guide needs to be ported on PIC32 MZ SK.
+
+Following command sequence showcases the method to change the WiFi configuration on the WFI32 board.
+
+![](images/uart_cli_bridge.png)
 
 ## Downloading and building the application
 
-To download or clone this application from Github, go to the [top level of the repository](https://github.com/MicrochipTech/PIC32MZW1_Ethernet_WIFI_Bridge_For_Ethernet_End_Node)
+To download or clone this application from Github, issue the following git command.
 
+>git clone --recurse-submodules https://github.com/c21415/PIC32MZW1_RMII_Bridge_with_PHY_StationMode.git
 
-To build the application, refer to the following table and open the project using its IDE.
+The successful cloning of the repo would result in following folders
+
+![](images/repo_folder_structure.png)
 
 | Project Name      | Description                                    |
 | ----------------- | ---------------------------------------------- |
 | wifi_eth_bridge_pic32mz_w1_curiosity_freertos.X | MPLABX project for PIC32MZ W1 Curiosity Board |
 |||
 
-## Setting up PIC32MZ W1 Curiosity Board
 
-- Connect the Debug USB port on the board to the computer using a micro USB cable
-- On the GPIO Header (J207), connect U1RX (PIN 13) and U1TX (PIN 23) to TX and RX pin of any USB to UART converter
-- Home AP (Wi-Fi Access Point with internet connection)
-
-## Running the Application
-
-1. Open the project and launch Harmony3 configurator.
-2.	Configure home AP credentials for STA Mode.
-
-    ![MHC](images/bridge_mhc1.png)
-
-    In **TCPIP Core** Component, enable **Enable External Packet Processing**
-    ![MHC](images/bridge_mhc2.png)
-
-    In **ETHMAC** Component, enable **Accept Not Me Unicast Packets**
-
-    ![MHC](images/bridge_mhc3.png)
+Download and install a serial terminal program like [TeraTerm](https://osdn.net/projects/ttssh2/releases/). Launch TeraTerm program and configure the serial ports mounted with: **115200 bps, 8 N 1**
 
 
-    During the code generation, keep below change for the bridiging application code , no need to merge with the new code
-    ![MHC](images/bridge_mhc4.png)
-3.  Save configurations and generate code via MHC 
-4.	Build and program the generated code into the hardware using its IDE
-5. Open the Terminal application (Ex.:Tera term) on the computer
-6. Connect to the "USB to UART" COM port and configure the serial settings as follows:
+
+#### Prepare WFI32E Curiosity Board
+
+1. Connect the Debug USB port on the board to the computer using a micro USB cable
+
+2. On the GPIO Header (J207), connect U1RX (PIN 13) and U1TX (PIN 23) to TX and RX pin of any USB to UART converter (for eg: USB UART click board)
+
+3. Open the Ethernet Bridge application project *./firmware/wifi_eth_bridge_pic32mz_w1_curiosity_freertos.X* in the IDE
+
+4. Build the project to generate the binary **(Do not program the binary)**
+
+5. Open the bootloader project *bootloader_apps_uart/apps/uart_bootloader/bootloader/firmware/pic32mz_w1_curiosity.X* in the MPLABX IDE
+
+6. Build and program the application using the IDE
+
+7. Run the **btl_host.py** from command prompt to program the application binary
+
+>cd bootloader/tools
+>
+>python btl_host.py -v -i <COM PORT> -d pic32mzw -a 0x90000000 -f ./firmware/wifi_eth_bridge_pic32mz_w1_curiosity_freertos.X/dist/pic32mz_w1_curiosity_freertos/production/wifi_eth_bridge_pic32mz_w1_curiosity_freertos.X.production.bin
+
+8. Following snapshot shows output of successfully programming the test application
+    - **Rebooting** and **Reboot Done** messages in below output signifies that bootloading is successful
+
+![](./images/uart_bootloader_update.mov)
+
+![](./images/btl_host_output.png)
+
+9. If above step is successful then the **RED LED (D202)** should start blinking
+
+Note:- Press and hold of the Switch **SW1/SW200** can trigger Bootloader from main application 
+
+
+#### Prepare PIC32MZ EF SK(Starter Kit) Board
+
+1. Open the Ethernet Bridge application project *./tcpip_udp_server/firmware/pic32mz_ef_sk.X* in the MPLABX IDE
+
+2. Build and program the application on PIC32MZ EF SK(Starter Kit)
+
+3. Now connect the PIC32MZ EF Starter kit UART1 interface to WFI32 Curiosity board console UART as specified in the following table.
+
+	| PIC32 EF Starter Kit  | WFI32E Curiosity Board  |
+	|:----------|:----------|
+	| J12-Pin#15 (U1Tx)    | J207-Pin#13 (U1Rx)       |
+	| J12-Pin#37 (U1Rx)    | J207-Pin#23 (U1Tx)       |
+	| J12-Pin#39 (GND)   | J207-Pin#17 (GND)          |
+
+
+4. Open the Terminal application (Ex.:Tera term) on the computer
+
+5. Connect the Debug USB port on PIC32MZ EF SK board to the computer using a mini USB cable and configure the serial settings as follows:
     - Baud : 115200
     - Data : 8 Bits
     - Parity : None
     - Stop : 1 Bit
     - Flow Control : None
 
-7.  Connect the ETH client to the ETH connector of the Cuisoity board 
-8.	The device will connect to the AP and the bridge start operation
+6.  Connect the ETH client to the ETH connector of the Cuisoity board 
+
+## Running the Application
+
+
+1.	On the PIC32MZ EF SK(Starter Kit) console interface issue the *bridge on* command 
 
     ![Console](images/bridge_log1.png)
 
