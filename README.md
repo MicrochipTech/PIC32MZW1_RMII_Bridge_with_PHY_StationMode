@@ -68,9 +68,6 @@ The "bridge" command is used to access the WFI32 CLI interface.
 
 Note:- The current PIC32MZ EF SK example includes only command bridge support but doesn't include the capability to upgrade/flash the WFI32 module firmware/application. In order to have the upgrade feature from host(PIC32MZ EF SK), the python command used in the [bootloader](https://github.com/Microchip-MPLAB-Harmony/bootloader_apps_uart/blob/master/apps/uart_bootloader/docs/readme_pic32mz_w1_curiosity.md) use guide needs to be ported on PIC32 MZ SK.
 
-Following command sequence showcases the method to change the WiFi configuration on the WFI32 board.
-
-![](images/uart_cli_bridge.png)
 
 ## Downloading and building the application
 
@@ -154,9 +151,28 @@ Note:- Press and hold of the Switch **SW1/SW200** can trigger Bootloader from ma
 
 1.	On the PIC32MZ EF SK(Starter Kit) console interface issue the *bridge on* command 
 
-    ![Console](images/bridge_log1.png)
+2.  Now PIC32MZ EF SK can issue the *bridge tunnel <WFI32 board CLI commands>* from its console
 
-9.	From the ETH client, user can ping the Access Point(AP) Gateway IP address.
+3.  Configure the home AP or Wi-Fi router details using the following command
 
-    ![Console](images/bridge_log2.png)
+> bridge tunnel **wifiprov set 0 1 GEN 0 1 3 wsn brucenegley**
+
+4.  Above command will modify the Wi-Fi configuration and make the WFI32 device to connect with *wsn* router with *brucenegley* password with *mixed mode(3)* security
+
+Following command sequence showcases the method to change the WiFi configuration on the WFI32 board.
+
+![](images/uart_cli_bridge.png)
+
+5.   Now the WFI32 device will connect to provided home AP and bridges the Wi-Fi link to Ethernet peer PIC32MZ EF SK.
+
+6.   The PIC32MZ EF SK board gets the DHCP resolved and *netinfo* command shown above shows its IP address
+
+
+9.	Now any client connected to same home AP can access the PIC32MZ EF SK board.
+
+
+10. The tcpip_udp_server application can be accessed from any UDP client in the same network
+
+
+![](images/uart_cli_bridge.png)
 
