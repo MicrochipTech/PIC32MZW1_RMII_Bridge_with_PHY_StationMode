@@ -68,6 +68,7 @@ The "bridge" command is used to access the WFI32 CLI interface.
 
 Note:- The current PIC32MZ EF SK example includes only command bridge support but doesn't include the capability to upgrade/flash the WFI32 module firmware/application. In order to have the upgrade feature from host(PIC32MZ EF SK), the python command used in the [bootloader](https://github.com/Microchip-MPLAB-Harmony/bootloader_apps_uart/blob/master/apps/uart_bootloader/docs/readme_pic32mz_w1_curiosity.md) use guide needs to be ported on PIC32 MZ SK.
 
+![](images/bridge_diagram.png)
 
 ## Downloading and building the application
 
