@@ -60,6 +60,7 @@
 // Section: Global Data Definitions
 // *****************************************************************************
 // *****************************************************************************
+#define APP_DOWNLOADER_BRIDGE_UART_RX_SIZE 128
 #define APP_ETHERNET_BRIDGE_BUFF_RX_SIZE   128
 #define APP_ETHERNET_BRIDGE_BUFF_TX_SIZE   256
 
@@ -80,6 +81,8 @@
 
 APP_DATA appData;
 
+uint8_t DownloaderUARTRxBuffer[APP_DOWNLOADER_BRIDGE_UART_RX_SIZE];
+
 char EthernetBridgeRxBuffer[APP_ETHERNET_BRIDGE_BUFF_RX_SIZE];
 char EthernetBridgeTxBuffer[APP_ETHERNET_BRIDGE_BUFF_TX_SIZE];
 
@@ -97,6 +100,20 @@ void Ethernet_Bridge_UART_Callback(uintptr_t context)
     appData.uartState = APP_TCPIP_BRIDGE_UART_DATA_READY;
     
 }
+
+
+
+void Downloader_UART_Read_Callback(uintptr_t context)
+{
+    appData.downlader_cb_cnt = UART2_ReadCountGet();    
+}
+
+void Downloader_UART_Write_Callback(UART_EVENT event, uintptr_t context)
+{
+    UART2_Read(DownloaderUARTRxBuffer, APP_DOWNLOADER_BRIDGE_UART_RX_SIZE);
+    SYS_TIME_CallbackRegisterMS(Downloader_UART_Read_Callback, 0, 100, SYS_TIME_SINGLE);                       
+}
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Application Local Functions
@@ -137,6 +154,23 @@ void Ethernet_Bridge_UART_Task(void)
             UART1_ReadCallbackRegister(NULL, 0);
             break;
         }
+        case APP_TCPIP_BRIDGE_BOOTLOADER_LOOP:
+        {
+            uint8_t inByte;              
+            while(1)
+            {
+                if(UART2_Read(&inByte, 1))
+                {                    
+                    UART1_Write((void *)&inByte, 1);
+                }
+                if(UART1_Read((void *)&inByte, 1))
+                {                    
+                    UART2_Write(&inByte, 1);
+                }
+            }
+                       
+        }
+        break;  
         default:
             break;
     }     
@@ -161,6 +195,11 @@ static int _Command_Bridge(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
     else if (memcmp(argv[1], "off", 3) == 0)
     {
         appData.uartState = APP_TCPIP_BRIDGE_UART_DISABLE;
+        appData.bridgeUart = false;
+    }
+    else if(memcmp(argv[1], "btl", 3) == 0)
+    {
+        appData.uartState = APP_TCPIP_BRIDGE_BOOTLOADER_LOOP;
         appData.bridgeUart = false;
     }
     else if(memcmp(argv[1], "tunnel", 6) == 0)
@@ -398,7 +437,7 @@ void APP_Tasks ( void )
             TCPIP_UDP_Discard(appData.socket);
         }
         break;
-                
+                                          
         default:
             break;
     }

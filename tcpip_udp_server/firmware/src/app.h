@@ -101,6 +101,8 @@ typedef enum {
     
     APP_TCPIP_BRIDGE_UART_DATA_READY,
             
+    APP_TCPIP_BRIDGE_BOOTLOADER_LOOP,                
+            
     APP_TCPIP_BRIDGE_UART_DISABLE,
     
 }BRIGE_UART_STATES;
@@ -126,6 +128,8 @@ typedef struct
     
     /* flag to bridge UART command interface with peer */
     bool bridgeUart;
+    
+    uint32_t downlader_cb_cnt;
 
     /* TODO: Define any additional data used by the application. */
     UDP_SOCKET              socket;
