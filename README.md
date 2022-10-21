@@ -10,9 +10,13 @@ Devices: **WFI32E01**
 Ethernet to Wi-Fi Bridge with PHY is a ready-to-use software solution to easily add Wi-Fi connectivity to any existing Ethernet-based board or finished product.  This solution can be executed on any [WFI32E01](https://www.microchip.com/en-us/product/WFI32E01PE) based design with RJ-45 connector. Following features are supported out of box. If required, users are free to customize or add other features using the source code included in this project.
 The solutions provides following feature sets: -
 
-- UART based Bootloader for Devcie Firmware Upgrade (DFU)
-- UART Host interface for Wi-Fi/System configuration 
-- Ethernet Bridge Application with Wi-Fi Station interface
+- Converts any Ethernet End Node into an Wi-Fi node
+- Provided field Devcie Firmware Upgrade (DFU)
+- Enables Wi-Fi configuration through host interface
+- Flexibility to access Wi-Fi module command line interface (CLI)
+- Higher throughput with reduced software overhead
+- Very minimum changes interms of hardware
+- Plug and play with just one time configuration
 
 
 The goal is to provide a ready to use solution which enables wireless connectivity on a Ethernet End node. 
