@@ -113,9 +113,6 @@ Download and install a serial terminal program like [TeraTerm](https://osdn.net/
 
 2. Build and program the application on PIC32MZ EF SK(Starter Kit)
 
-3. Open the Terminal application (Ex.:Tera term) on the computer
-
-4.  Connect the ETH client to the ETH connector of the Cuisoity board 
 
 #### Prepare WFI32E Curiosity Board
 
@@ -137,31 +134,33 @@ Download and install a serial terminal program like [TeraTerm](https://osdn.net/
 	| J12-Pin#37 (U1Rx)    | J207-Pin#23 (U1Tx)       |
 	| J12-Pin#39 (GND)   | J207-Pin#17 (GND)          |
 
-7. Connect the Debug USB port on PIC32MZ EF SK board to the computer using a mini USB cable and configure the serial settings as follows:
+7. Connect Ethernet End Node board's Ethernet interface to WFI32E01 Cuisoity board Ethernet connector using a Ethernet(RJ45) cable
+
+8. Connect the Debug USB port on PIC32MZ EF SK board to the computer using a mini USB cable and configure the serial settings as follows:
     - Baud : 115200
     - Data : 8 Bits
     - Parity : None
     - Stop : 1 Bit
     - Flow Control : None
 
-8. Open the Ethernet End Node (PIC32MZ EF SK board) debug console using the TeraTerm and issue the following command to tunnel the bootloader interface with WFI32E01
+9. Open the Ethernet End Node (PIC32MZ EF SK board) debug console using the TeraTerm and issue the following command to tunnel the bootloader interface with WFI32E01
 
 >bridge btl
 >
 
-9. Now close the TeraTerm and run the **btl_host.py** from command prompt to program the Ethernet to Wi-Fi bridge application binary on WFI32E01 module
+10. Now close the TeraTerm and run the **btl_host.py** from command prompt to program the Ethernet to Wi-Fi bridge application binary on WFI32E01 module
 
 >cd bootloader/tools
 >
 >python btl_host.py -v -i < COM PORT of Ethernet End Node console > -d pic32mzw -a 0x90000000 -f ./firmware/wifi_eth_bridge_pic32mz_w1_curiosity_freertos.X/dist/pic32mz_w1_curiosity_freertos/production/wifi_eth_bridge_pic32mz_w1_curiosity_freertos.X.production.bin
 
-10. Following snapshot shows output of successfully programming the test application
+11. Following snapshot shows output of successfully programming the test application
     - **Rebooting** and **Reboot Done** messages in below output signifies that bootloading is successful
 
 
 ![](./images/btl_host_output.png)
 
-11. If above step is successful then the **RED LED (D202)** should start blinking
+12. If above step is successful then the **RED LED (D202)** should start blinking
 
 Note:- Press and hold of the Switch **SW1/SW200** can trigger Bootloader from main application 
 
