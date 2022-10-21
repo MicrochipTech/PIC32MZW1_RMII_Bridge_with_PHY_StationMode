@@ -1,27 +1,27 @@
 # Ethernet to Wi-Fi Bridge with PHY 
 <img src="images/IoT-Made-Easy-Logo.png" width=100>
 
-> "Wireless Made Easy!" - This example application acts as a bridge to bridge up Wi-Fi and ETH interface of WFI32E01 device, WFI32E01 set as Wi-Fi Station(STA) mode to connect to Access point(AP). The WFI32E01 device help connect ETH end node to the Access point (AP) in this example.
+> "Wireless Made Easy!" - This example application acts as a bridge to bridge up Wi-Fi and ETH interface of WFI32E01 device, WFI32E01 set as Wi-Fi Station (STA) mode to connect to Access point(AP). The WFI32E01 device help connect ETH end node to the Access point (AP) in this example.
 
 Devices: **WFI32E01**
 
 ## Description
 
 Ethernet to Wi-Fi Bridge with PHY is a ready-to-use software solution to easily add Wi-Fi connectivity to any existing Ethernet-based board or finished product.  This solution can be executed on any [WFI32E01](https://www.microchip.com/en-us/product/WFI32E01PE) based design with RJ-45 connector. Following features are supported out of box. If required, users are free to customize or add other features using the source code included in this project.
-The solutions provides following feature sets: -
+The solutions provide following feature sets: -
 
-- Converts any Ethernet End Node into an Wi-Fi node
-- Provided field Devcie Firmware Upgrade (DFU)
+- Converts any Ethernet End Node into a Wi-Fi node
+- Plug and play with just one time configuration
+- Provided field Device Firmware Upgrade (DFU)
 - Enables Wi-Fi configuration through host interface
 - Flexibility to access Wi-Fi module command line interface (CLI)
 - Higher throughput with reduced software overhead
-- Very minimum changes interms of hardware
-- Plug and play with just one time configuration
+- Very minimum hardware changes
 
 
-The goal is to provide a ready to use solution which enables wireless connectivity on a Ethernet End node. 
+The goal is to provide a ready to use solution which enables wireless connectivity on an Ethernet End node. 
 
-The project includes a UART based bootloader and command interface to configure the WFI32E01 module based wireless interface. It enables field upgrade of WFI32E01 wireless module and command interface to configure the wireless interface. 
+The project provides a single UART interface for both device firmware upgrade and device configuration. It enables field upgrade of WFI32E01 wireless module and run time access to control the wireless interface. 
 
 
 ## Software components 
@@ -58,7 +58,7 @@ Following picture illustrates the connections between Ethernet to Wi-Fi Bridge b
 
 ## Block Diagram
 
-The following diagram illustrates various software componets involved in this solution
+The following diagram illustrates various software components involved in this solution
 
 ![](images/block_diagram.png)
 
@@ -70,13 +70,13 @@ The purpose of the bootloader is to enable the application/firmware upgrade thou
 
 **2. WFI32E01 Ethernet bridge Application**
 
-The main application demonstrates how a Ethernet End Node can connect to a Wi-Fi network through WFI32E01 device. The WFI32E01 device is set as Wi-Fi Station (STA) mode to connect to a Accesss point (AP) and act as a Wi-Fi to Ethernet bridge to bridge up the Wi-Fi and Ethernet interfaces. In this setup, Ethernet End Node will connect to the Ethernet connector of WFI32E01 device and exchange data with the Access Point through the WFI32E01 device. 
+The main application demonstrates how a Ethernet End Node can connect to a Wi-Fi network through WFI32E01 device. The WFI32E01 device is set as Wi-Fi Station (STA) mode to connect to a Access point (AP) and act as a Wi-Fi to Ethernet bridge to bridge up the Wi-Fi and Ethernet interfaces. In this setup, Ethernet End Node will connect to the Ethernet connector of WFI32E01 device and exchange data with the Access Point through the WFI32E01 device. 
 
-The application process the IP packets that is received from the Wi-Fi and Ethernet interface at bridge.c. The code in this file act as a transparent bridge to receive and forward the network packets to and from both Wi-Fi and Ethernet interface. It sets the MAC address of WFI32E01 module to be the same as Ethernet End Node so that the Ethernet end node can communicate with the AP. As both Ethernet end node and WFI32E01 are using the same mac address, they are acting as a single unit in the network.
+The application processes the IP packets that is received from the Wi-Fi and Ethernet interface at bridge.c. The code in this file act as a transparent bridge to receive and forward the network packets to and from both Wi-Fi and Ethernet interface. It sets the MAC address of WFI32E01 module to be the same as Ethernet End Node so that the Ethernet end node can communicate with the AP. As both Ethernet end node and WFI32E01 are using the same mac address, they are acting as a single unit in the network.
 
-Note:- The bridge applicaiton does not use the H3 L2 Bridge feature. 
+Note:- The bridge application does not use the H3 L2 Bridge feature. 
 
-The user would need to configure the Home AP credentials (like SSID and security items). The Wi-Fi service running on WFI32E01 device will use the credentials to connect to the Home AP.The default application will try to establish a connection to AP "DEMO_AP" with WPA2 security and password as a "password". 
+The user would need to configure the Home AP credentials (like SSID and security items). The Wi-Fi service running on WFI32E01 device will use the credentials to connect to the Home AP. The default application will try to establish a connection to AP "DEMO_AP" with WPA2 security and password as a "password". 
 
 The solution exports the WFI32E01 module command line interface with the Ethernet End Node device over the UART interface. It enables the Ethernet End Node to configure the Wi-Fi credentials and also provide access to all the CLI commands. 
 
@@ -84,7 +84,7 @@ The solution exports the WFI32E01 module command line interface with the Etherne
 
 It is an PIC32MZ EF SK based network application (tcpip_udp_server), it acts as the Ethernet End Node application with a UDP server listening for incoming connection. It uses the Ethernet PHY interface to access the WFI32E01 board Wi-Fi interface. 
 
-The Ethernet End Node applicaiton is capable of accessing the WFI32E01 CLI commands, the UART console interface tunnels the user commands to WFI32E01 UART interface.
+The Ethernet End Node application can access the WFI32E01 CLI commands, the UART console interface tunnels the user commands to WFI32E01 UART interface.
 
 The "bridge" command is used to link the WFI32E01 CLI interface on PIC32MZ EF SK console. 
    - '*>bridge btl*' -> Tunnels the UART lines to perform the WFI32E01 Firmware upgrade 
@@ -166,7 +166,7 @@ Download and install a serial terminal program like [TeraTerm](https://osdn.net/
 
 12. If above step is successful then the **RED LED (D202)** should start blinking
 
-Note:- Press and hold of the Switch **SW1/SW200** can trigger Bootloader from main application 
+Note: - Press and hold of the Switch **SW1/SW200** can trigger Bootloader from main application 
 
 
 ## Running the Application
