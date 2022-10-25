@@ -1,7 +1,7 @@
 # Ethernet to Wi-Fi Bridge with PHY 
 <img src="images/IoT-Made-Easy-Logo.png" width=100>
 
-> "Wireless Made Easy!" - This example application acts as a bridge to bridge up Wi-Fi and ETH interface of WFI32E01 device, WFI32E01 set as Wi-Fi Station (STA) mode to connect to Access point(AP). The WFI32E01 device help connect ETH end node to the Access point (AP) in this example.
+> "Wireless Made Easy!" - This is a ready-to-use Ethernet to Wi-Fi Bridge to easily add Wi-Fi connectivity to any existing Ethernet RJ-45 based board or finished product. This solution can be executed on any WFI32E01 based design with RJ-45 connector.
 
 Devices: **WFI32E01**
 
@@ -15,7 +15,7 @@ The solutions provide following feature sets: -
 - Provided field Device Firmware Upgrade (DFU)
 - Enables Wi-Fi configuration through host interface
 - Flexibility to access Wi-Fi module command line interface (CLI)
-- Higher throughput with reduced software overhead
+- DFU and device CLI are supported on same UART link
 - Very minimum hardware changes
 
 
